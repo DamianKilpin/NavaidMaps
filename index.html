@@ -1,0 +1,1336 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css"><link rel="stylesheet" href="css/L.Control.Locate.min.css">
+        <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/leaflet-measure.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script><script src="js/L.Control.Locate.min.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="js/leaflet-measure.js"></script>
+        <script src="data/Facilities_1.js"></script>
+        <script src="data/NavAidsCSV_2.js"></script>
+        <script>
+        var highlightLayer;
+        function highlightFeature(e) {
+            highlightLayer = e.target;
+
+            if (e.target.feature.geometry.type === 'LineString') {
+              highlightLayer.setStyle({
+                color: '#ffff00',
+              });
+            } else {
+              highlightLayer.setStyle({
+                fillColor: '#ffff00',
+                fillOpacity: 1
+              });
+            }
+        }
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1
+        }).fitBounds([[-35.625654825518644,116.98773739820825],[-34.52620096796932,119.52576263667825]]);
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        L.control.locate({locateOptions: {maxZoom: 19}}).addTo(map);
+        var measureControl = new L.Control.Measure({
+            position: 'topleft',
+            primaryLengthUnit: 'meters',
+            secondaryLengthUnit: 'kilometers',
+            primaryAreaUnit: 'sqmeters',
+            secondaryAreaUnit: 'hectares'
+        });
+        measureControl.addTo(map);
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .innerHTML = '';
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .className += ' fas fa-ruler';
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+        }
+        map.createPane('pane_GoogleHybrid_0');
+        map.getPane('pane_GoogleHybrid_0').style.zIndex = 400;
+        var layer_GoogleHybrid_0 = L.tileLayer('http://mt0.google.com/vt/lyrs=y&hl=en&x={x}&y={y}&z={z}', {
+            pane: 'pane_GoogleHybrid_0',
+            opacity: 1.0,
+            attribution: '',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 18
+        });
+        layer_GoogleHybrid_0;
+        map.addLayer(layer_GoogleHybrid_0);
+        function pop_Facilities_1(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Facility</th>\
+                        <td>' + (feature.properties['Facility'] !== null ? autolinker.link(feature.properties['Facility'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">LOCCODE</th>\
+                        <td>' + (feature.properties['LOCCODE'] !== null ? autolinker.link(feature.properties['LOCCODE'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Asset Name</th>\
+                        <td>' + (feature.properties['Asset Name'] !== null ? autolinker.link(feature.properties['Asset Name'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Critical Asset (Yes/No)</th>\
+                        <td>' + (feature.properties['Critical Asset (Yes/No)'] !== null ? autolinker.link(feature.properties['Critical Asset (Yes/No)'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Asset ID NuM</th>\
+                        <td>' + (feature.properties['Asset ID NuM'] !== null ? autolinker.link(feature.properties['Asset ID NuM'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Category</th>\
+                        <td>' + (feature.properties['Category'] !== null ? autolinker.link(feature.properties['Category'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">SubCategory</th>\
+                        <td>' + (feature.properties['SubCategory'] !== null ? autolinker.link(feature.properties['SubCategory'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Responsible Agency</th>\
+                        <td>' + (feature.properties['Responsible Agency'] !== null ? autolinker.link(feature.properties['Responsible Agency'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Comments</th>\
+                        <td>' + (feature.properties['Comments'] !== null ? autolinker.link(feature.properties['Comments'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Date of Last Inspection</th>\
+                        <td>' + (feature.properties['Date of Last Inspection'] !== null ? autolinker.link(feature.properties['Date of Last Inspection'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Latest AMP'] !== null ? autolinker.link(feature.properties['Latest AMP'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Ventia Comment'] !== null ? autolinker.link(feature.properties['Ventia Comment'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Replacement Year'] !== null ? autolinker.link(feature.properties['Replacement Year'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Design Life (Maximo)'] !== null ? autolinker.link(feature.properties['Design Life (Maximo)'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Remaining Life (Ventia Estimated)'] !== null ? autolinker.link(feature.properties['Remaining Life (Ventia Estimated)'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['OCI (1 - 5)'] !== null ? autolinker.link(feature.properties['OCI (1 - 5)'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Rounded OCI'] !== null ? autolinker.link(feature.properties['Rounded OCI'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Condition Rating'] !== null ? autolinker.link(feature.properties['Condition Rating'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['OCI Combined'] !== null ? autolinker.link(feature.properties['OCI Combined'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Current Status (replaced/modified etc)'] !== null ? autolinker.link(feature.properties['Current Status (replaced/modified etc)'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Drawings'] !== null ? autolinker.link(feature.properties['Drawings'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Lattitude'] !== null ? autolinker.link(feature.properties['Lattitude'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Longitude'] !== null ? autolinker.link(feature.properties['Longitude'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AMPS FM CRS'] !== null ? autolinker.link(feature.properties['AMPS FM CRS'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Facility2'] !== null ? autolinker.link(feature.properties['Facility2'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Facilities_1_0(feature) {
+            switch(String(feature.properties['Category'])) {
+                case 'Buildings':
+                    return {
+                pane: 'pane_Facilities_1',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/accommodation_bed_and_breakfast.svg',
+            iconSize: [15.2, 15.2]
+        }),
+                interactive: true,
+            }
+                    break;
+                case 'Coastal Structures':
+                    return {
+                pane: 'pane_Facilities_1',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/poi_cave.svg',
+            iconSize: [15.2, 15.2]
+        }),
+                interactive: true,
+            }
+                    break;
+                case 'Dredging Works':
+                    return {
+                pane: 'pane_Facilities_1',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/shipwreck.svg',
+            iconSize: [15.2, 15.2]
+        }),
+                interactive: true,
+            }
+                    break;
+                case 'Land Infrastructure':
+                    return {
+                pane: 'pane_Facilities_1',
+        rotationAngle: -0.02617995,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/transport_ford.svg',
+            iconSize: [15.2, 15.2]
+        }),
+                interactive: true,
+            }
+                    break;
+                case 'Launching Facilities':
+                    return {
+                pane: 'pane_Facilities_1',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/boat.svg',
+            iconSize: [15.2, 15.2]
+        }),
+                interactive: true,
+            }
+                    break;
+                case 'Marine Structures':
+                    return {
+                pane: 'pane_Facilities_1',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/transport_marina.svg',
+            iconSize: [15.2, 15.2]
+        }),
+                interactive: true,
+            }
+                    break;
+                case 'Moorings':
+                    return {
+                pane: 'pane_Facilities_1',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/transport_port.svg',
+            iconSize: [15.2, 15.2]
+        }),
+                interactive: true,
+            }
+                    break;
+                case 'Plant and Equipment':
+                    return {
+                pane: 'pane_Facilities_1',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/transport_fuel.svg',
+            iconSize: [15.2, 15.2]
+        }),
+                interactive: true,
+            }
+                    break;
+                case 'Services':
+                    return {
+                pane: 'pane_Facilities_1',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/poi_tower_power.svg',
+            iconSize: [15.2, 15.2]
+        }),
+                interactive: true,
+            }
+                    break;
+                case 'Signs':
+                    return {
+                pane: 'pane_Facilities_1',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/transport_traffic_lights.svg',
+            iconSize: [15.2, 15.2]
+        }),
+                interactive: true,
+            }
+                    break;
+                case 'Tidal Works':
+                    return {
+                pane: 'pane_Facilities_1',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/tourist_waterwheel.svg',
+            iconSize: [15.2, 15.2]
+        }),
+                interactive: true,
+            }
+                    break;
+                default:
+                    return {
+                pane: 'pane_Facilities_1',
+                radius: 8.0,
+                opacity: 1,
+                color: 'rgba(128,17,25,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(72,211,17,1.0)',
+                interactive: true,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_Facilities_1');
+        map.getPane('pane_Facilities_1').style.zIndex = 401;
+        map.getPane('pane_Facilities_1').style['mix-blend-mode'] = 'normal';
+        var layer_Facilities_1 = new L.geoJson(json_Facilities_1, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Facilities_1',
+            layerName: 'layer_Facilities_1',
+            pane: 'pane_Facilities_1',
+            onEachFeature: pop_Facilities_1,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_Facilities_1_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_Facilities_1);
+        map.addLayer(layer_Facilities_1);
+        function pop_NavAidsCSV_2(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Location'] !== null ? autolinker.link(feature.properties['Location'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Location Code'] !== null ? autolinker.link(feature.properties['Location Code'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Anode Depletion'] !== null ? autolinker.link(feature.properties['Anode Depletion'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Nav Aid Number'] !== null ? autolinker.link(feature.properties['Nav Aid Number'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Nav Aid Status'] !== null ? autolinker.link(feature.properties['Nav Aid Status'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Nav Aid Type'] !== null ? autolinker.link(feature.properties['Nav Aid Type'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['B P Condition Rating'] !== null ? autolinker.link(feature.properties['B P Condition Rating'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['B P Condition Rating Date'] !== null ? autolinker.link(feature.properties['B P Condition Rating Date'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Comment'] !== null ? autolinker.link(feature.properties['Comment'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Diver Comments'] !== null ? autolinker.link(feature.properties['Diver Comments'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['DOT Categorisation'] !== null ? autolinker.link(feature.properties['DOT Categorisation'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['DrawingMetaData'] !== null ? autolinker.link(feature.properties['DrawingMetaData'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Inspection Progress'] !== null ? autolinker.link(feature.properties['Inspection Progress'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Inspection Status'] !== null ? autolinker.link(feature.properties['Inspection Status'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Last B P'] !== null ? autolinker.link(feature.properties['Last B P'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Last Replaced'] !== null ? autolinker.link(feature.properties['Last Replaced'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Latest AMP FY'] !== null ? autolinker.link(feature.properties['Latest AMP FY'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Legal   Compliance'] !== null ? autolinker.link(feature.properties['Legal   Compliance'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Light Replacement Date'] !== null ? autolinker.link(feature.properties['Light Replacement Date'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Light Colour'] !== null ? autolinker.link(feature.properties['Light Colour'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Light Type'] !== null ? autolinker.link(feature.properties['Light Type'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Max visible distance of light (NM)'] !== null ? autolinker.link(feature.properties['Max visible distance of light (NM)'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Longitude'] !== null ? autolinker.link(feature.properties['Longitude'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Latitude'] !== null ? autolinker.link(feature.properties['Latitude'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Replaced/ Addition/ Deletion'] !== null ? autolinker.link(feature.properties['Replaced/ Addition/ Deletion'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Situation'] !== null ? autolinker.link(feature.properties['Situation'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Structural Comments'] !== null ? autolinker.link(feature.properties['Structural Comments'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Structural Condition Rating'] !== null ? autolinker.link(feature.properties['Structural Condition Rating'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Sub Location'] !== null ? autolinker.link(feature.properties['Sub Location'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Ventia Assessment Comments'] !== null ? autolinker.link(feature.properties['Ventia Assessment Comments'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Ventia Assessment Date'] !== null ? autolinker.link(feature.properties['Ventia Assessment Date'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Water Depth (m)'] !== null ? autolinker.link(feature.properties['Water Depth (m)'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AMPS NACRS Data'] !== null ? autolinker.link(feature.properties['AMPS NACRS Data'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_NavAidsCSV_2_0(feature) {
+            switch(String(feature.properties['Nav Aid Type'])) {
+                default:
+                    return {
+                pane: 'pane_NavAidsCSV_2',
+                radius: 8.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(59,216,51,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Auxiliary Structure Attachment':
+                    return {
+                pane: 'pane_NavAidsCSV_2',
+                radius: 8.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(166,204,76,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Big buoy':
+                    return {
+                pane: 'pane_NavAidsCSV_2',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(15,157,228,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Big Buoy':
+                    return {
+                pane: 'pane_NavAidsCSV_2',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(15,157,228,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Buoy':
+                    return {
+                pane: 'pane_NavAidsCSV_2',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(15,157,228,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Buoy  ':
+                    return {
+                pane: 'pane_NavAidsCSV_2',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(15,157,228,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Buoy   ':
+                    return {
+                pane: 'pane_NavAidsCSV_2',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(15,157,228,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Buoy - Guardian':
+                    return {
+                pane: 'pane_NavAidsCSV_2',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(15,157,228,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Buoy - Megellan (Jeyco)':
+                    return {
+                pane: 'pane_NavAidsCSV_2',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(15,157,228,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Buoy - meridian':
+                    return {
+                pane: 'pane_NavAidsCSV_2',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(15,157,228,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Buoy - Meridian':
+                    return {
+                pane: 'pane_NavAidsCSV_2',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(15,157,228,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Buoy - Meridian Plus':
+                    return {
+                pane: 'pane_NavAidsCSV_2',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(15,157,228,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Buoy - Pencil':
+                    return {
+                pane: 'pane_NavAidsCSV_2',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(15,157,228,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Buoy - SLB1500':
+                    return {
+                pane: 'pane_NavAidsCSV_2',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(15,157,228,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Buoy - Spar':
+                    return {
+                pane: 'pane_NavAidsCSV_2',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(15,157,228,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Buoy - Spherical':
+                    return {
+                pane: 'pane_NavAidsCSV_2',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(15,157,228,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Buoy - Temporary':
+                    return {
+                pane: 'pane_NavAidsCSV_2',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(15,157,228,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Buoy - Temporary ':
+                    return {
+                pane: 'pane_NavAidsCSV_2',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(15,157,228,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Buoy - Trinav':
+                    return {
+                pane: 'pane_NavAidsCSV_2',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(15,157,228,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Buoy - Zeni':
+                    return {
+                pane: 'pane_NavAidsCSV_2',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(15,157,228,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Buoy Lit':
+                    return {
+                pane: 'pane_NavAidsCSV_2',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(15,157,228,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Buoy Unlit':
+                    return {
+                pane: 'pane_NavAidsCSV_2',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(15,157,228,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Concrete Obelisk':
+                    return {
+                pane: 'pane_NavAidsCSV_2',
+                radius: 8.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(230,60,199,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'GRP Hut':
+                    return {
+                pane: 'pane_NavAidsCSV_2',
+                radius: 8.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(230,60,199,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Jettable':
+                    return {
+                pane: 'pane_NavAidsCSV_2',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(161,211,69,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Jettable - 114':
+                    return {
+                pane: 'pane_NavAidsCSV_2',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(161,211,69,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Jettable - 114 stainless steel':
+                    return {
+                pane: 'pane_NavAidsCSV_2',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(161,211,69,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Jettable - 160 Alum':
+                    return {
+                pane: 'pane_NavAidsCSV_2',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(161,211,69,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Jettable - 168':
+                    return {
+                pane: 'pane_NavAidsCSV_2',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(161,211,69,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Landbased structure':
+                    return {
+                pane: 'pane_NavAidsCSV_2',
+                radius: 8.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(230,60,199,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Lattice Tower':
+                    return {
+                pane: 'pane_NavAidsCSV_2',
+                radius: 8.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(230,60,199,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Lighthouse':
+                    return {
+                pane: 'pane_NavAidsCSV_2',
+                radius: 12.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(230,60,199,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Pile - Concrete':
+                    return {
+                pane: 'pane_NavAidsCSV_2',
+                radius: 8.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(227,21,6,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Pile - Concrete Sleeve':
+                    return {
+                pane: 'pane_NavAidsCSV_2',
+                radius: 8.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(227,21,6,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Pile - Plastic':
+                    return {
+                pane: 'pane_NavAidsCSV_2',
+                radius: 8.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(227,21,6,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Pile - Steel':
+                    return {
+                pane: 'pane_NavAidsCSV_2',
+                radius: 8.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(227,21,6,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Pile - Steel 356':
+                    return {
+                pane: 'pane_NavAidsCSV_2',
+                radius: 8.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(227,21,6,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Pile - Steel. Temporary buoy in use.':
+                    return {
+                pane: 'pane_NavAidsCSV_2',
+                radius: 8.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(227,21,6,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Pile - Timber':
+                    return {
+                pane: 'pane_NavAidsCSV_2',
+                radius: 8.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(227,21,6,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Pile - Timber with steel super structure':
+                    return {
+                pane: 'pane_NavAidsCSV_2',
+                radius: 8.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(227,21,6,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Pole - Steel':
+                    return {
+                pane: 'pane_NavAidsCSV_2',
+                radius: 8.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(235,93,17,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Pole - Steel - Barrel':
+                    return {
+                pane: 'pane_NavAidsCSV_2',
+                radius: 8.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(235,93,17,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Pole - Steel - Swing down':
+                    return {
+                pane: 'pane_NavAidsCSV_2',
+                radius: 8.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(235,93,17,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Pole - Steel - Swing Down':
+                    return {
+                pane: 'pane_NavAidsCSV_2',
+                radius: 8.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(235,93,17,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Pole - Steel - Trebuchet':
+                    return {
+                pane: 'pane_NavAidsCSV_2',
+                radius: 8.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(235,93,17,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Steel Cabinet':
+                    return {
+                pane: 'pane_NavAidsCSV_2',
+                radius: 8.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(230,60,199,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Tripod - Steel':
+                    return {
+                pane: 'pane_NavAidsCSV_2',
+                radius: 8.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(230,60,199,1.0)',
+                interactive: true,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_NavAidsCSV_2');
+        map.getPane('pane_NavAidsCSV_2').style.zIndex = 402;
+        map.getPane('pane_NavAidsCSV_2').style['mix-blend-mode'] = 'normal';
+        var layer_NavAidsCSV_2 = new L.geoJson(json_NavAidsCSV_2, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_NavAidsCSV_2',
+            layerName: 'layer_NavAidsCSV_2',
+            pane: 'pane_NavAidsCSV_2',
+            onEachFeature: pop_NavAidsCSV_2,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_NavAidsCSV_2_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_NavAidsCSV_2);
+        map.addLayer(layer_NavAidsCSV_2);
+        var baseMaps = {};
+        L.control.layers(baseMaps,{'NavAidsCSV<br /><table><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_0.png" /></td><td></td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_AuxiliaryStructureAttachment1.png" /></td><td>Auxiliary Structure Attachment</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_Bigbuoy2.png" /></td><td>Big buoy</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_BigBuoy3.png" /></td><td>Big Buoy</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_Buoy4.png" /></td><td>Buoy</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_Buoy5.png" /></td><td>Buoy  </td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_Buoy6.png" /></td><td>Buoy   </td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_BuoyGuardian7.png" /></td><td>Buoy - Guardian</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_BuoyMegellanJeyco8.png" /></td><td>Buoy - Megellan (Jeyco)</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_Buoymeridian9.png" /></td><td>Buoy - meridian</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_BuoyMeridian10.png" /></td><td>Buoy - Meridian</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_BuoyMeridianPlus11.png" /></td><td>Buoy - Meridian Plus</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_BuoyPencil12.png" /></td><td>Buoy - Pencil</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_BuoySLB150013.png" /></td><td>Buoy - SLB1500</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_BuoySpar14.png" /></td><td>Buoy - Spar</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_BuoySpherical15.png" /></td><td>Buoy - Spherical</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_BuoyTemporary16.png" /></td><td>Buoy - Temporary</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_BuoyTemporary17.png" /></td><td>Buoy - Temporary </td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_BuoyTrinav18.png" /></td><td>Buoy - Trinav</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_BuoyZeni19.png" /></td><td>Buoy - Zeni</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_BuoyLit20.png" /></td><td>Buoy Lit</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_BuoyUnlit21.png" /></td><td>Buoy Unlit</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_ConcreteObelisk22.png" /></td><td>Concrete Obelisk</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_GRPHut23.png" /></td><td>GRP Hut</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_Jettable24.png" /></td><td>Jettable</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_Jettable11425.png" /></td><td>Jettable - 114</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_Jettable114stainlesssteel26.png" /></td><td>Jettable - 114 stainless steel</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_Jettable160Alum27.png" /></td><td>Jettable - 160 Alum</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_Jettable16828.png" /></td><td>Jettable - 168</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_Landbasedstructure29.png" /></td><td>Landbased structure</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_LatticeTower30.png" /></td><td>Lattice Tower</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_Lighthouse31.png" /></td><td>Lighthouse</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_PileConcrete32.png" /></td><td>Pile - Concrete</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_PileConcreteSleeve33.png" /></td><td>Pile - Concrete Sleeve</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_PilePlastic34.png" /></td><td>Pile - Plastic</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_PileSteel35.png" /></td><td>Pile - Steel</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_PileSteel35636.png" /></td><td>Pile - Steel 356</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_PileSteelTemporarybuoyinuse37.png" /></td><td>Pile - Steel. Temporary buoy in use.</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_PileTimber38.png" /></td><td>Pile - Timber</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_PileTimberwithsteelsuperstructure39.png" /></td><td>Pile - Timber with steel super structure</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_PoleSteel40.png" /></td><td>Pole - Steel</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_PoleSteelBarrel41.png" /></td><td>Pole - Steel - Barrel</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_PoleSteelSwingdown42.png" /></td><td>Pole - Steel - Swing down</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_PoleSteelSwingDown43.png" /></td><td>Pole - Steel - Swing Down</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_PoleSteelTrebuchet44.png" /></td><td>Pole - Steel - Trebuchet</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_SteelCabinet45.png" /></td><td>Steel Cabinet</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_TripodSteel46.png" /></td><td>Tripod - Steel</td></tr></table>': layer_NavAidsCSV_2,'Facilities<br /><table><tr><td style="text-align: center;"><img src="legend/Facilities_1_Buildings0.png" /></td><td>Buildings</td></tr><tr><td style="text-align: center;"><img src="legend/Facilities_1_CoastalStructures1.png" /></td><td>Coastal Structures</td></tr><tr><td style="text-align: center;"><img src="legend/Facilities_1_DredgingWorks2.png" /></td><td>Dredging Works</td></tr><tr><td style="text-align: center;"><img src="legend/Facilities_1_LandInfrastructure3.png" /></td><td>Land Infrastructure</td></tr><tr><td style="text-align: center;"><img src="legend/Facilities_1_LaunchingFacilities4.png" /></td><td>Launching Facilities</td></tr><tr><td style="text-align: center;"><img src="legend/Facilities_1_MarineStructures5.png" /></td><td>Marine Structures</td></tr><tr><td style="text-align: center;"><img src="legend/Facilities_1_Moorings6.png" /></td><td>Moorings</td></tr><tr><td style="text-align: center;"><img src="legend/Facilities_1_PlantandEquipment7.png" /></td><td>Plant and Equipment</td></tr><tr><td style="text-align: center;"><img src="legend/Facilities_1_Services8.png" /></td><td>Services</td></tr><tr><td style="text-align: center;"><img src="legend/Facilities_1_Signs9.png" /></td><td>Signs</td></tr><tr><td style="text-align: center;"><img src="legend/Facilities_1_TidalWorks10.png" /></td><td>Tidal Works</td></tr><tr><td style="text-align: center;"><img src="legend/Facilities_1_11.png" /></td><td></td></tr></table>': layer_Facilities_1,"GoogleHybrid": layer_GoogleHybrid_0,},{collapsed:false}).addTo(map);
+        map.on("zoomend", function(){
+
+                if (map.hasLayer(layer_Facilities_1)) {
+                    if (map.getZoom() <= 13 && map.getZoom() >= 19) {
+                        layer_Facilities_1.eachLayer(function (layer) {
+                            layer.openTooltip();
+                        });
+                    } else {
+                        layer_Facilities_1.eachLayer(function (layer) {
+                            layer.closeTooltip();
+                        });
+                    }
+                }
+                if (map.hasLayer(layer_NavAidsCSV_2)) {
+                    if (map.getZoom() <= 13 && map.getZoom() >= 19) {
+                        layer_NavAidsCSV_2.eachLayer(function (layer) {
+                            layer.openTooltip();
+                        });
+                    } else {
+                        layer_NavAidsCSV_2.eachLayer(function (layer) {
+                            layer.closeTooltip();
+                        });
+                    }
+                }
+        });
+        setBounds();
+        var i = 0;
+        layer_Facilities_1.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['Asset Name'] !== null?String('<div style="color: #09cfb1; font-size: 10pt; font-weight: bold; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['Asset Name']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Facilities_1'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_NavAidsCSV_2.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['Sub Location'] !== null?String('<div style="color: #325fff; font-size: 10pt; font-weight: bold; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['Sub Location']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_NavAidsCSV_2'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+                if (map.hasLayer(layer_Facilities_1)) {
+                    if (map.getZoom() <= 13 && map.getZoom() >= 19) {
+                        layer_Facilities_1.eachLayer(function (layer) {
+                            layer.openTooltip();
+                        });
+                    } else {
+                        layer_Facilities_1.eachLayer(function (layer) {
+                            layer.closeTooltip();
+                        });
+                    }
+                }
+                if (map.hasLayer(layer_NavAidsCSV_2)) {
+                    if (map.getZoom() <= 13 && map.getZoom() >= 19) {
+                        layer_NavAidsCSV_2.eachLayer(function (layer) {
+                            layer.openTooltip();
+                        });
+                    } else {
+                        layer_NavAidsCSV_2.eachLayer(function (layer) {
+                            layer.closeTooltip();
+                        });
+                    }
+                }
+        resetLabels([layer_Facilities_1,layer_NavAidsCSV_2]);
+        map.on("zoomend", function(){
+            resetLabels([layer_Facilities_1,layer_NavAidsCSV_2]);
+        });
+        map.on("layeradd", function(){
+            resetLabels([layer_Facilities_1,layer_NavAidsCSV_2]);
+        });
+        map.on("layerremove", function(){
+            resetLabels([layer_Facilities_1,layer_NavAidsCSV_2]);
+        });
+        </script>
+    </body>
+</html>
