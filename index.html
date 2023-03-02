@@ -1019,6 +1019,14 @@
             initial: false,
             hideMarkerOnCollapse: true,
             propertyName: 'Nav Aid Number'}));
+
+            searchControl.on('search:locationfound', function(e) {
+    if(e.layer._popup)
+        e.layer.openPopup();
+
+    map.setView(e.layer.getLatLng(), 16); // Change the zoom level to your desired value
+});
+
         document.getElementsByClassName('search-button')[0].className +=
          ' fa fa-binoculars';
         resetLabels([layer_NavAidsCSV_2]);
