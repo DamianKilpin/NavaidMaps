@@ -55,7 +55,7 @@
         }
         var map = L.map('map', {
             zoomControl:true, maxZoom:28, minZoom:1
-        }).fitBounds([[-35.11099567390528,117.63534452954543],[-34.83577937235096,118.26985083916311]]);
+        }).fitBounds([[-35.35181664634901,117.43483246139485],[-34.67564736063061,118.70384508062989]]);
         var hash = new L.Hash(map);
         map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
         var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
@@ -1018,7 +1018,7 @@
             layer: layer_NavAidsCSV_2,
             initial: false,
             hideMarkerOnCollapse: true,
-            propertyName: 'Location'}));
+            propertyName: 'Nav Aid Number'}));
         document.getElementsByClassName('search-button')[0].className +=
          ' fa fa-binoculars';
         resetLabels([layer_NavAidsCSV_2]);
