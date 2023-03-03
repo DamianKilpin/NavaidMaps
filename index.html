@@ -55,7 +55,7 @@
         }
         var map = L.map('map', {
             zoomControl:true, maxZoom:28, minZoom:1
-        }).fitBounds([[-35.35181664634901,117.43483246139485],[-34.67564736063061,118.70384508062989]]);
+        }).fitBounds([[-34.98003356667369,117.92858809637532],[-34.94562703100476,118.00790138507763]]);
         var hash = new L.Hash(map);
         map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
         var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
@@ -975,20 +975,6 @@
         .title += 'Search for a place';
         var baseMaps = {};
         L.control.layers(baseMaps,{'NavAidsCSV<br /><table><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_0.png" /></td><td></td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_AuxiliaryStructureAttachment1.png" /></td><td>Auxiliary Structure Attachment</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_Bigbuoy2.png" /></td><td>Big buoy</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_BigBuoy3.png" /></td><td>Big Buoy</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_Buoy4.png" /></td><td>Buoy</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_Buoy5.png" /></td><td>Buoy  </td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_Buoy6.png" /></td><td>Buoy   </td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_BuoyGuardian7.png" /></td><td>Buoy - Guardian</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_BuoyMegellanJeyco8.png" /></td><td>Buoy - Megellan (Jeyco)</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_Buoymeridian9.png" /></td><td>Buoy - meridian</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_BuoyMeridian10.png" /></td><td>Buoy - Meridian</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_BuoyMeridianPlus11.png" /></td><td>Buoy - Meridian Plus</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_BuoyPencil12.png" /></td><td>Buoy - Pencil</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_BuoySLB150013.png" /></td><td>Buoy - SLB1500</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_BuoySpar14.png" /></td><td>Buoy - Spar</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_BuoySpherical15.png" /></td><td>Buoy - Spherical</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_BuoyTemporary16.png" /></td><td>Buoy - Temporary</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_BuoyTemporary17.png" /></td><td>Buoy - Temporary </td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_BuoyTrinav18.png" /></td><td>Buoy - Trinav</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_BuoyZeni19.png" /></td><td>Buoy - Zeni</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_BuoyLit20.png" /></td><td>Buoy Lit</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_BuoyUnlit21.png" /></td><td>Buoy Unlit</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_ConcreteObelisk22.png" /></td><td>Concrete Obelisk</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_GRPHut23.png" /></td><td>GRP Hut</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_Jettable24.png" /></td><td>Jettable</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_Jettable11425.png" /></td><td>Jettable - 114</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_Jettable114stainlesssteel26.png" /></td><td>Jettable - 114 stainless steel</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_Jettable160Alum27.png" /></td><td>Jettable - 160 Alum</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_Jettable16828.png" /></td><td>Jettable - 168</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_Landbasedstructure29.png" /></td><td>Landbased structure</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_LatticeTower30.png" /></td><td>Lattice Tower</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_Lighthouse31.png" /></td><td>Lighthouse</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_PileConcrete32.png" /></td><td>Pile - Concrete</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_PileConcreteSleeve33.png" /></td><td>Pile - Concrete Sleeve</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_PilePlastic34.png" /></td><td>Pile - Plastic</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_PileSteel35.png" /></td><td>Pile - Steel</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_PileSteel35636.png" /></td><td>Pile - Steel 356</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_PileSteelTemporarybuoyinuse37.png" /></td><td>Pile - Steel. Temporary buoy in use.</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_PileTimber38.png" /></td><td>Pile - Timber</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_PileTimberwithsteelsuperstructure39.png" /></td><td>Pile - Timber with steel super structure</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_PoleSteel40.png" /></td><td>Pole - Steel</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_PoleSteelBarrel41.png" /></td><td>Pole - Steel - Barrel</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_PoleSteelSwingdown42.png" /></td><td>Pole - Steel - Swing down</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_PoleSteelSwingDown43.png" /></td><td>Pole - Steel - Swing Down</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_PoleSteelTrebuchet44.png" /></td><td>Pole - Steel - Trebuchet</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_SteelCabinet45.png" /></td><td>Steel Cabinet</td></tr><tr><td style="text-align: center;"><img src="legend/NavAidsCSV_2_TripodSteel46.png" /></td><td>Tripod - Steel</td></tr></table>': layer_NavAidsCSV_2,"GoogleHybrid": layer_GoogleHybrid_1,"Google Labels": layer_GoogleLabels_0,}).addTo(map);
-        map.on("zoomend", function(){
-
-                if (map.hasLayer(layer_NavAidsCSV_2)) {
-                    if (map.getZoom() <= 13 && map.getZoom() >= 19) {
-                        layer_NavAidsCSV_2.eachLayer(function (layer) {
-                            layer.openTooltip();
-                        });
-                    } else {
-                        layer_NavAidsCSV_2.eachLayer(function (layer) {
-                            layer.closeTooltip();
-                        });
-                    }
-                }
-        });
         setBounds();
         var i = 0;
         layer_NavAidsCSV_2.eachLayer(function(layer) {
@@ -996,28 +982,17 @@
                 feature: layer.feature,
                 variables: {}
             };
-            layer.bindTooltip((layer.feature.properties['Sub Location'] !== null?String('<div style="color: #325fff; font-size: 10pt; font-weight: bold; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['Sub Location']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_NavAidsCSV_2'});
+            layer.bindTooltip((layer.feature.properties['Nav Aid Number'] !== null?String('<div style="color: #ffd43a; font-size: 10pt; font-weight: bold; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['Nav Aid Number']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_NavAidsCSV_2'});
             labels.push(layer);
             totalMarkers += 1;
               layer.added = true;
               addLabel(layer, i);
               i++;
         });
-                if (map.hasLayer(layer_NavAidsCSV_2)) {
-                    if (map.getZoom() <= 13 && map.getZoom() >= 19) {
-                        layer_NavAidsCSV_2.eachLayer(function (layer) {
-                            layer.openTooltip();
-                        });
-                    } else {
-                        layer_NavAidsCSV_2.eachLayer(function (layer) {
-                            layer.closeTooltip();
-                        });
-                    }
-                }
         map.addControl(new L.Control.Search({
             layer: layer_NavAidsCSV_2,
             initial: false,
-            hideMarkerOnCollapse: false,
+            hideMarkerOnCollapse: true,
             propertyName: 'Nav Aid Number'}));
         document.getElementsByClassName('search-button')[0].className +=
          ' fa fa-binoculars';
